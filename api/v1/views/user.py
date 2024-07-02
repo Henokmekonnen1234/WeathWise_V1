@@ -31,9 +31,9 @@ def login():
     if login_data:
         user = storage.filter(User, "email", login_data["email"])
         if user:
-            if decrypt(login_data["email"], user.password):
-                token = create_access_token(identity=user._id)
-                return jsonify({"token": token})
+            if decrypt(login_data["password"], user.password):
+                print(user)
+                return jsonify({"token": create_access_token(identity=user.email)})
             else:
                 return jsonify("Password is not correct"), 401
         else:

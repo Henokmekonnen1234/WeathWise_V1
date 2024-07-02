@@ -3,6 +3,7 @@
 from api.v1.views import app_views
 from flask import Flask, jsonify, make_response
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 from models import storage
 from uuid import uuid4
 
@@ -11,7 +12,7 @@ app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 app.config["SECRET_KEY"] = str(uuid4())
 app.register_blueprint(app_views)
 cors = CORS(app, resources={r"/api/v1/*/": {"origins": "*"}})
-
+jwt = JWTManager(app)
 @app.teardown_appcontext
 def close_mongodb(error):
     storage.close()

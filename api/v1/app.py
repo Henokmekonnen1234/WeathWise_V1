@@ -13,6 +13,13 @@ app.config["SECRET_KEY"] = str(uuid4())
 app.register_blueprint(app_views)
 cors = CORS(app, resources={r"/api/v1/*/": {"origins": "*"}})
 jwt = JWTManager(app)
+
+
+@app.before_request
+def open_mongodb():
+    storage.reload()
+
+
 @app.teardown_appcontext
 def close_mongodb(error):
     storage.close()

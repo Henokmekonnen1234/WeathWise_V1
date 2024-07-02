@@ -2,10 +2,10 @@
 
 from api.v1.views import app_views
 from flask import request, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from models import storage
 from models.user import User
-from models.utility import taken_value, encrypt, decrypt
+from models.utility import taken_value, encrypt, decrypt, not_found
 
 @app_views.route("/register", methods=["POST"], strict_slashes=False)
 def user_register():
@@ -31,12 +31,24 @@ def login():
     if login_data:
         user = storage.filter(User, "email", login_data["email"])
         if user:
+            print(user)
             if decrypt(login_data["password"], user.password):
-                print(user)
-                return jsonify({"token": create_access_token(identity=user.email)})
+                token = create_access_token(identity=str(user._id))
+                return jsonify({"token": token})
             else:
                 return jsonify("Password is not correct"), 401
         else:
             return jsonify("Email is not found"), 404
     else:
         return jsonify("data not found"), 404
+
+@app_views.route("/user", methods=["GET"], strict_slashes=False)
+@jwt_required()
+def get_user():
+
+    user_id = get_jwt_identity()
+    user = storage.get(User, user_id)
+    if not user:
+        return jsonify(not_found), 404
+    user._id = str(user._id)
+    return jsonify(user.to_dict())

@@ -5,6 +5,7 @@ This module interacts with the MongoDB database for saving and
 retrieving data.
 """
 
+from bson import ObjectId
 from models.base_model import BaseModel
 from models.user import User
 from models.transaction import Transaction
@@ -23,11 +24,15 @@ class DBStorage:
     __db = None
 
     def __init__(self):
-        """Initialize the database connection"""
-        MONGO_HOST = getenv('MONGO_HOST', 'localhost')
-        MONGO_PORT = int(getenv('MONGO_PORT', 27017))
-        self.MONGO_DB = getenv('MONGO_DB', 'wealthwise')
-        self.__client = MongoClient(MONGO_HOST, MONGO_PORT)
+        self.connect()
+
+    def connect(self):
+        if not self.__client:
+            MONGO_HOST = getenv('MONGO_HOST', 'localhost')
+            MONGO_PORT = int(getenv('MONGO_PORT', 27017))
+            MONGO_DB = getenv('MONGO_DB', 'wealthwise')
+            self.__client = MongoClient(MONGO_HOST, MONGO_PORT)
+            self.__db = self.__client[MONGO_DB]
         
 
     def get_collection(self, collection_name):
@@ -61,11 +66,12 @@ class DBStorage:
 
     def reload(self):
         """Reloads data from the database"""
-        self.__db = self.__client[self.MONGO_DB]
+        self.connect()
 
     def close(self):
         """Close the database connection"""
         self.__client.close()
+        self.__client = None
 
     def get(self, cls, id):
         """Returns the object based on the class name and its ID, or None if not found"""

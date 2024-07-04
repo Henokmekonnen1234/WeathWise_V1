@@ -66,3 +66,16 @@ def update_user():
         setattr(user, key, value)
     user.update()
     return jsonify(user.to_dict())
+
+
+@app_views.route("/user", methods=["DELETE"], strict_slashes=False)
+@jwt_required()
+def delete_user():
+
+    user_id = get_jwt_identity()
+    user = storage.get(User, user_id)
+    user_name = f"{user.first_name} {user.last_name}"
+    if not user:
+        return jsonify(not_found), 400
+    user.delete()
+    return jsonify(user_name)

@@ -5,11 +5,11 @@ from models.user import User
 from models.transaction import Transaction
 
 user = User()
-user.first_name = "Henok"
-user.last_name = "Mekonnen"
-user.email = "someone@gmail.com"
-user.username = "Henokmac"
-user.password = "@Enok123"
+user.first_name = "Henok3"
+user.last_name = "Mekonnen3"
+user.email = "someon333e@gmail.com"
+user.username = "Henokmac333"
+user.password = "@Enok123333"
 user.save()
 ts = Transaction()
 ts.user_id = user._id
@@ -20,4 +20,3 @@ ts.description = "for coffee"
 ts.save()
 print(storage.all())
 print("=============")
-print(storage.get(User, "bf822464-3c3c-4eff-a33f-3b780abd4f96"))

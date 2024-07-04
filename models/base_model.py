@@ -42,16 +42,22 @@ class BaseModel:
         self.updated_date = datetime.now(timezone.utc)
         models.storage.new(self)
 
+    def update(self):
+        """Update the object to the database"""
+        self.updated_date = datetime.now(timezone.utc)
+        models.storage.update(self)
+
     def to_dict(self):
         """Convert the class instance to a dictionary"""
-        to_dict = self.__dict__.copy()
+        to_dict = {}
+        for key, value in self.__dict__.items():
+            if key != "password":
+                to_dict[key] = value
         to_dict["__class__"] = self.__class__.__name__
         if "created_date" in to_dict and not isinstance(to_dict["created_date"], str):
             to_dict["created_date"] = to_dict["created_date"].strftime("%Y-%m-%dT%H:%M:%S.%f")
         if "updated_date" in to_dict and not isinstance(to_dict["updated_date"], str):
             to_dict["updated_date"] = to_dict["updated_date"].strftime("%Y-%m-%dT%H:%M:%S.%f")
-        if "password" in to_dict:
-            del to_dict["password"]
         return to_dict
 
     def __str__(self):

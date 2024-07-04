@@ -33,7 +33,7 @@ class DBStorage:
             MONGO_DB = getenv('MONGO_DB', 'wealthwise')
             self.__client = MongoClient(MONGO_HOST, MONGO_PORT)
             self.__db = self.__client[MONGO_DB]
-        
+
 
     def get_collection(self, collection_name):
         """Get a collection from the database"""
@@ -55,14 +55,22 @@ class DBStorage:
         """Add the object to the database"""
         collection = self.get_collection(obj.__class__.__name__.lower() + "s")
         data = obj.to_dict()
+        data["password"] = obj.password
         del data["__class__"]
         collection.insert_one(data)
+
+    def update(self, obj):
+        collection = self.get_collection(obj.__class__.__name__.lower() + "s")
+        data = obj.to_dict()
+        data["password"] = obj.password
+        del data["__class__"]
+        collection.update_one({"_id": obj._id},{"$set": data})
 
     def delete(self, obj=None):
         """Delete the object from the database"""
         if obj is not None:
             collection = self.get_collection(obj.__class__.__name__.lower() + "s")
-            collection.delete_one({"id": obj.id})
+            collection.delete_one({"_id": obj._id})
 
     def reload(self):
         """Reloads data from the database"""
@@ -97,4 +105,4 @@ class DBStorage:
         results = collection.find({value: {"$regex": f'^{search_q}', "$options": 'i'}})
         return [cls(**result) for result in results]
 
-    
+

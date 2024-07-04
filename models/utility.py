@@ -41,26 +41,25 @@ def taken_value(cls, **kwargs):
         del kwargs["password"]
     if kwargs:
         for key, value in kwargs.items():
-            if key == "name":
+            if key == "email":
                 obj = storage.filter(cls, key, value)
                 if obj:
                     return f"{key} already present, change your {key}"
-            elif key == "email":
-                obj = storage.filter(cls, key, value)
-                if obj:
-                    return f"{key} already present, change your {key}"
-            elif key == "phone_no":
-                obj = storage.filter(cls, key, value)
-                if obj:
-                    return f"Phone number already present, change your phone number"
-            elif key == "website":
-                obj = storage.filter(cls, key, value)
-                if obj:
-                    return f"{key} already present, change your {key}"
-            elif key == "description":
+            elif key == "username":
                 obj = storage.filter(cls, key, value)
                 if obj:
                     return f"{key} already present, change your {key}"
         return False
     else:
         return f"No value passed"
+
+def is_user_valid(data: dict = None):
+    required_fields = [
+        'first_name', 'last_name', 'email', 'username', 'password'
+        ]
+    for field in required_fields:
+        md_field = field.replace('_', ' ').capitalize()
+        if not data.get(field):
+            return f"{md_field} is required"
+    else:
+        return False

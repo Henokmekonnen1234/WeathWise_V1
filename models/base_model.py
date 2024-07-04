@@ -50,6 +50,7 @@ class BaseModel:
     def to_dict(self):
         """Convert the class instance to a dictionary"""
         to_dict = {}
+        print(self.__dict__)
         for key, value in self.__dict__.items():
             if key != "password":
                 to_dict[key] = value

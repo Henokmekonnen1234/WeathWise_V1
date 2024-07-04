@@ -23,8 +23,8 @@ def add_transaction():
     if not transaction:
         return jsonify(not_found), 404
     transaction.save()
-    user.trasaction.append(transaction._id)
-    user.save()
+    user.transactions.append(transaction._id)
+    user.update()
     return jsonify(
         {
             "user": user.to_dict(),
@@ -41,9 +41,9 @@ def get_all_transaction():
     user = storage.get(User, user_id)
     if not user:
         return jsonify(not_found), 404
-    all_txn = [value.to_dict()
+    all_txn = [value
                for _, value in storage.all(Transaction).items()
-               if value._id in user.transaction]
+               if value["_id"] in user.transactions]
     return jsonify(all_txn)
 
 
@@ -60,7 +60,7 @@ def get_transaction(id=None):
     transaction = storage.get(Transaction, id)
     if not transaction:
         return jsonify(not_found), 404
-    if transaction._id in user.transaction:
+    if transaction._id in user.transactions:
         return jsonify(transaction.to_dict())
     else:
         return jsonify(not_found), 404
@@ -77,7 +77,7 @@ def update_transaction(id=None):
     if not id:
         return jsonify(not_found), 404
     transaction = storage.get(Transaction, id)
-    if not transaction and transaction._id in user.transaction:
+    if not transaction and transaction._id in user.transactions:
         return jsonify(not_found), 404
     txn_data = request.get_json()
     if not txn_data:

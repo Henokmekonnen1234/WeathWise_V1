@@ -55,14 +55,17 @@ class DBStorage:
         """Add the object to the database"""
         collection = self.get_collection(obj.__class__.__name__.lower() + "s")
         data = obj.to_dict()
-        data["password"] = obj.password
+        if obj.__class__.__name__ == "User":
+            data["password"] = obj.password
+            data["transactions"] = []
         del data["__class__"]
         collection.insert_one(data)
 
     def update(self, obj):
         collection = self.get_collection(obj.__class__.__name__.lower() + "s")
         data = obj.to_dict()
-        data["password"] = obj.password
+        if obj.__class__.__name__ == "User":
+            data["password"] = obj.password
         del data["__class__"]
         collection.update_one({"_id": obj._id},{"$set": data})
 

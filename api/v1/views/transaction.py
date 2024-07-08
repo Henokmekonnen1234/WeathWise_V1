@@ -8,7 +8,7 @@ from models.transaction import Transaction
 from models.utility import not_found
 
 
-@app_views.route("/transaction", methods=["POST"], strict_slashes=False)
+@app_views.route("/transactions", methods=["POST"], strict_slashes=False)
 @jwt_required()
 def add_transaction():
 
@@ -25,15 +25,10 @@ def add_transaction():
     transaction.save()
     user.transactions.append(transaction._id)
     user.update()
-    return jsonify(
-        {
-            "user": user.to_dict(),
-            "transaction": transaction.to_dict()
-        }
-            )
+    return jsonify(transaction.to_dict() )
 
 
-@app_views.route("/transaction", methods=["GET"], strict_slashes=False)
+@app_views.route("/transactions", methods=["GET"], strict_slashes=False)
 @jwt_required()
 def get_all_transaction():
 
@@ -47,7 +42,7 @@ def get_all_transaction():
     return jsonify(all_txn)
 
 
-@app_views.route("/transaction/<id>", methods=["GET"], strict_slashes=False)
+@app_views.route("/transactions/<id>", methods=["GET"], strict_slashes=False)
 @jwt_required()
 def get_transaction(id=None):
 
@@ -66,7 +61,7 @@ def get_transaction(id=None):
         return jsonify(not_found), 404
 
 
-@app_views.route("/transaction/<id>", methods=["PUT"], strict_slashes=False)
+@app_views.route("/transactions/<id>", methods=["PUT"], strict_slashes=False)
 @jwt_required()
 def update_transaction(id=None):
 

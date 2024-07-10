@@ -5,7 +5,7 @@ This module interacts with the MongoDB database for saving and
 retrieving data.
 """
 
-from bson import ObjectId
+from datetime import datetime
 from models.base_model import BaseModel
 from models.user import User
 from models.transaction import Transaction
@@ -101,11 +101,4 @@ class DBStorage:
         if data:
             return cls(**data)
         return None
-
-    def search(self, cls, search_q, value):
-        """Search for objects by a search query in a specified field"""
-        collection = self.get_collection(cls.__name__.lower() + "s")
-        results = collection.find({value: {"$regex": f'^{search_q}', "$options": 'i'}})
-        return [cls(**result) for result in results]
-
 

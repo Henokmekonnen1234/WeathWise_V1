@@ -81,3 +81,16 @@ def update_transaction(id=None):
         setattr(transaction, key, value)
     transaction.update()
     return jsonify(transaction.to_dict())
+
+
+@app_views.route("/summery", methods=["GET"], strict_slashes=False)
+@jwt_required()
+def txn_summery():
+    user_id = get_jwt_identity()
+    user = storage.get(User, user_id)
+    if not user:
+        return jsonify(not_found), 404
+    get_data = request.get_json()
+    if not get_data:
+        return jsonify(not_found), 404
+    return jsonify(get_data)

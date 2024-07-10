@@ -101,4 +101,32 @@ class DBStorage:
         if data:
             return cls(**data)
         return None
+    
 
+    def search(self, obj, year, month):
+        transaction = self.get_collection(Transaction.__name__.lower() + "s")
+        transaction_ids = obj.transactions
+        if not transaction_ids:
+            return {}
+        pipeline = [
+        {"$match": {"_id": {"$in": [id for id in transaction_ids]}}},
+        {"$project": {
+            "type": 1,
+            "amount": 1,
+            "year": {"$year": "$created_date"},
+            "month": {"$month": "$created_date"}
+        }},
+        {"$match": {"year": year, "month": month}},
+        {"$group": {
+            "_id": "$type",
+            "total_amount": {"$sum": "$amount"}
+        }}
+        ]
+
+        summary = list(transaction.aggregate(pipeline))
+
+        result = {"income": 0, "expense": 0}
+        for item in summary:
+            transaction_type = item['_id']
+            result[transaction_type] = item['total_amount']
+        return result

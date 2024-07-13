@@ -1,5 +1,6 @@
 
 from api.v1.views import app_views
+from datetime import datetime
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import storage
@@ -93,5 +94,26 @@ def txn_summery():
     get_data = request.get_json()
     if not get_data:
         return jsonify(not_found), 404
-    result = storage.search(user, )
-    return jsonify(get_data)
+    all_txn = [value
+               for _, value in storage.all(Transaction).items()
+               if value["_id"] in user.transactions]
+    start_date = datetime(get_data["year"], get_data["month"], 1)
+    if get_data["month"] == 12:
+        end_date = datetime(get_data["year"] + 1, 1, 1)
+    else:
+        end_date = datetime(get_data["year"], get_data["month"] + 1, 1)
+
+    result = {"income": 0, "expense": 0}
+    
+    for transaction in all_txn:
+        created_date = datetime.strptime(transaction['created_date'],  "%Y-%m-%dT%H:%M:%S.%f")
+        if start_date <= created_date < end_date:
+            if transaction['type'] == 'income':
+                print("=====income=========")
+                print(transaction)
+                result["income"] += transaction['amount']
+            elif transaction['type'] == 'expense':
+                print("=====expense=========")
+                print(transaction)
+                result["expense"] += transaction['amount']
+    return jsonify(result)

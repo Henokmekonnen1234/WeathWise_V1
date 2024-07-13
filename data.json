@@ -1,0 +1,54 @@
+[{
+    "_id": "00000004-0000-4000-8000-000000000004",
+    "created_date": "2018-04-05T12:00:00.000000",
+    "updated_date": "2018-04-05T12:00:00.000000",
+    "amount": 1200.00,
+    "type": "income",
+    "catagory": "bonus",
+    "description": "Annual work bonus"
+  },
+  {
+    "_id": "00000005-0000-4000-8000-000000000005",
+    "created_date": "2019-05-19T08:15:23.000000",
+    "updated_date": "2019-05-19T08:15:23.000000",
+    "amount": 42.99,
+    "type": "expense",
+    "category": "entertainment", 
+    "description": "Movie ticket and popcorn"
+  },
+  {
+    "_id": "00000006-0000-4000-8000-000000000006",
+    "created_date": "2020-06-10T10:33:47.000000",
+    "updated_date": "2020-06-10T10:33:47.000000",
+    "amount": 800.00,
+    "type": "income",
+    "catagory": "investment",
+    "description": "Investment return"
+  },
+  {
+    "_id": "00000008-0000-4000-8000-000000000008",
+    "created_date": "2021-07-21T15:27:12.000000",
+    "updated_date": "2021-07-21T15:27:12.000000",
+    "amount": 157.20,
+    "type": "expense",
+    "catagory": "dining",
+    "description": "Restaurant dinner with friends"
+  },
+  {
+    "_id": "00000009-0000-4000-8000-000000000009",
+    "created_date": "2022-08-12T09:48:33.000000",
+    "updated_date": "2022-08-12T09:48:33.000000",
+    "amount": 300.00,
+    "type": "income",
+    "catagory": "gift",
+    "description": "Birthday gift from family"
+  },
+  {
+    "_id": "00000010-0000-4000-8000-000000000010",
+    "created_date": "2023-09-03T11:01:44.000000",
+    "updated_date": "2023-09-03T11:01:44.000000",
+    "amount": 98.45,
+    "type": "expense",
+    "catagory": "transportation",
+    "description": "Monthly public transport pass"
+  }]

@@ -46,7 +46,6 @@ class DBStorage:
             if cls is None or cls is class_type or cls is class_name:
                 collection = self.get_collection(class_name.lower() + "s")
                 for obj in collection.find():
-                    print(type(obj))
                     obj_instance = class_type(**obj)
                     new_dict[f"{obj_instance.__class__.__name__}.{obj_instance._id}"] = obj_instance.to_dict()
         return new_dict
@@ -109,24 +108,26 @@ class DBStorage:
         if not transaction_ids:
             return {}
         pipeline = [
-        {"$match": {"_id": {"$in": [id for id in transaction_ids]}}},
+        {"$match": {"_id": {"$in": transaction_ids}}},
         {"$project": {
             "type": 1,
             "amount": 1,
-            "year": {"$year": "$created_date"},
-            "month": {"$month": "$created_date"}
+            "created_date": 1,
+            "year": {"$substr": ["$created_date", 0, 4]},  
+            "month": {"$substr": ["$created_date", 5, 2]}  
         }},
-        {"$match": {"year": year, "month": month}},
+        {"$match": {"year": str(year), "month": str(month).zfill(2)}},  
         {"$group": {
             "_id": "$type",
             "total_amount": {"$sum": "$amount"}
         }}
-        ]
+    ]
 
         summary = list(transaction.aggregate(pipeline))
-
+        
         result = {"income": 0, "expense": 0}
         for item in summary:
+            print("summary: ", item)
             transaction_type = item['_id']
             result[transaction_type] = item['total_amount']
         return result

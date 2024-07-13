@@ -107,6 +107,7 @@ def txn_summery():
     
     for transaction in all_txn:
         created_date = datetime.strptime(transaction['created_date'],  "%Y-%m-%dT%H:%M:%S.%f")
+        print(start_date ,created_date ,end_date)
         if start_date <= created_date < end_date:
             if transaction['type'] == 'income':
                 print("=====income=========")

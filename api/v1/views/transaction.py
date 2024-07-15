@@ -94,27 +94,7 @@ def txn_summery():
     get_data = request.get_json()
     if not get_data:
         return jsonify(not_found), 404
-    all_txn = [value
-               for _, value in storage.all(Transaction).items()
-               if value["_id"] in user.transactions]
-    start_date = datetime(get_data["year"], get_data["month"], 1)
-    if get_data["month"] == 12:
-        end_date = datetime(get_data["year"] + 1, 1, 1)
-    else:
-        end_date = datetime(get_data["year"], get_data["month"] + 1, 1)
-
-    result = {"income": 0, "expense": 0}
-    
-    for transaction in all_txn:
-        created_date = datetime.strptime(transaction['created_date'],  "%Y-%m-%dT%H:%M:%S.%f")
-        print(start_date ,created_date ,end_date)
-        if start_date <= created_date < end_date:
-            if transaction['type'] == 'income':
-                print("=====income=========")
-                print(transaction)
-                result["income"] += transaction['amount']
-            elif transaction['type'] == 'expense':
-                print("=====expense=========")
-                print(transaction)
-                result["expense"] += transaction['amount']
+    result = storage.search(user, get_data["year"], get_data["month"])
+    filter = storage.filter_all(user, get_data["year"], get_data["month"])
+    print("filtered  ",filter)
     return jsonify(result)

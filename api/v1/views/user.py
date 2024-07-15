@@ -27,7 +27,6 @@ def login():
     if login_data:
         user = storage.filter(User, "username", login_data["username"])
         if user:
-            print(user)
             if decrypt(login_data["password"], user.password):
                 token = create_access_token(identity=str(user._id))
                 return jsonify({"token": token})

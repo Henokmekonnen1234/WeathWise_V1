@@ -116,7 +116,7 @@ class DBStorage:
             "year": {"$substr": ["$created_date", 0, 4]},  
             "month": {"$substr": ["$created_date", 5, 2]}  
         }},
-        {"$match": {"year": str(year), "month": str(month).zfill(2)}},  
+        {"$match": {"year": str(year), "month": str(month).zfill(2)}},
         {"$group": {
             "_id": "$type",
             "total_amount": {"$sum": "$amount"}
@@ -127,7 +127,27 @@ class DBStorage:
         
         result = {"income": 0, "expense": 0}
         for item in summary:
-            print("summary: ", item)
             transaction_type = item['_id']
             result[transaction_type] = item['total_amount']
         return result
+    
+    def filter_all(self, obj, year, month):
+        transaction = self.get_collection(Transaction.__name__.lower() + "s")
+        transaction_ids = obj.transactions
+        if not transaction_ids:
+            return {}
+        pipeline = [
+        {"$match": {"_id": {"$in": transaction_ids}}},
+         {"$project": {
+            "type": 1,
+            "amount": 1,
+            "created_date": 1,
+            "year": {"$substr": ["$created_date", 0, 4]},  
+            "month": {"$substr": ["$created_date", 5, 2]}  
+        }},
+        {"$match": {"year": str(year), "month": str(month).zfill(2)}}
+        
+        ]
+
+        filtered_data = transaction.aggregate(pipeline)
+        return filtered_data

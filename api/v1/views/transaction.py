@@ -1,13 +1,11 @@
 
 from api.v1.views import app_views
-from datetime import datetime
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import storage
 from models.user import User
 from models.transaction import Transaction
 from models.utility import not_found
-
 
 @app_views.route("/transactions", methods=["POST"], strict_slashes=False)
 @jwt_required()
@@ -26,6 +24,7 @@ def add_transaction():
     transaction.save()
     user.transactions.append(transaction._id)
     user.update()
+    cache.delete_memoized(get_all_transaction, user_id)
     return jsonify(transaction.to_dict() )
 
 
@@ -94,7 +93,9 @@ def txn_summery():
     get_data = request.get_json()
     if not get_data:
         return jsonify(not_found), 404
-    result = storage.search(user, get_data["year"], get_data["month"])
-    filter = storage.filter_all(user, get_data["year"], get_data["month"])
-    print("filtered  ",filter)
+    page = int(request.args.get('page', 1))
+    page_size = int(request.args.get('page_size', 10))
+    result = storage.search(user, get_data.get("year"),
+                                get_data.get("month"), page,
+                                page_size)
     return jsonify(result)

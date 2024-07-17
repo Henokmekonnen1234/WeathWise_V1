@@ -6,6 +6,7 @@ retrieving data.
 """
 
 from datetime import datetime
+import math
 from models.base_model import BaseModel
 from models.user import User
 from models.transaction import Transaction
@@ -102,52 +103,86 @@ class DBStorage:
         return None
     
 
-    def search(self, obj, year, month):
+    def search(self, obj, year, month, page, page_size):
         transaction = self.get_collection(Transaction.__name__.lower() + "s")
         transaction_ids = obj.transactions
+        skip = (page - 1) * page_size
         if not transaction_ids:
             return {}
-        pipeline = [
-        {"$match": {"_id": {"$in": transaction_ids}}},
-        {"$project": {
-            "type": 1,
-            "amount": 1,
-            "created_date": 1,
-            "year": {"$substr": ["$created_date", 0, 4]},  
-            "month": {"$substr": ["$created_date", 5, 2]}  
-        }},
-        {"$match": {"year": str(year), "month": str(month).zfill(2)}},
-        {"$group": {
-            "_id": "$type",
-            "total_amount": {"$sum": "$amount"}
-        }}
-    ]
+        if year and month:
+            string = f"{year}-{str(month).zfill(2)}"
+        elif year:
+            string = f"{year}"
 
-        summary = list(transaction.aggregate(pipeline))
-        
-        result = {"income": 0, "expense": 0}
-        for item in summary:
-            transaction_type = item['_id']
-            result[transaction_type] = item['total_amount']
-        return result
-    
-    def filter_all(self, obj, year, month):
-        transaction = self.get_collection(Transaction.__name__.lower() + "s")
-        transaction_ids = obj.transactions
-        if not transaction_ids:
-            return {}
         pipeline = [
-        {"$match": {"_id": {"$in": transaction_ids}}},
-         {"$project": {
-            "type": 1,
-            "amount": 1,
-            "created_date": 1,
-            "year": {"$substr": ["$created_date", 0, 4]},  
-            "month": {"$substr": ["$created_date", 5, 2]}  
-        }},
-        {"$match": {"year": str(year), "month": str(month).zfill(2)}}
-        
+            {"$match": {"_id": {"$in": transaction_ids}}},
+            {"$match": {"created_date": {"$regex": string}}},
+            {
+                "$facet": {
+                    "summery": [
+                        {"$group": {
+                            "_id": "$type",
+                            "total_amount": {"$sum": "$amount"}
+                        }}
+                    ],
+                    "transactions": [
+                        {"$skip": skip},
+                        {"$limit": page_size},
+                        {"$project": {
+                            "_id": 1,
+                            "type": 1,
+                            "amount": 1,
+                            "created_date": 1
+                        }}
+                    ],
+                    "total_count": [
+                        {"$count": "total_documents"}
+                    ]
+                }
+            },
+            
         ]
 
-        filtered_data = transaction.aggregate(pipeline)
-        return filtered_data
+        results = list(transaction.aggregate(pipeline))
+
+        total_documents = results[0]["total_count"][0]["total_documents"]
+        total_pages = math.ceil(total_documents / page_size)
+        summery = {}
+        transactions = []
+        for values in results[0]["transactions"]:
+            txn = Transaction(**values)
+            transactions.append(txn.to_dict())
+        for value in results[0]["summery"]:
+            summery[value["_id"]] = value["total_amount"]
+        return {
+            "page": page,
+            "page_size": page_size,
+            "total_pages": total_pages,
+            "total_documents": total_documents,
+            "summery": summery,
+            "transactions": transactions
+        }
+        
+    def filter_all(self, obj, year, month, skip, page_size):
+        transaction = self.get_collection(Transaction.__name__.lower() + "s")
+        transaction_ids = obj.transactions
+        if not transaction_ids:
+            return {}
+        if year and month:
+            string = f"{year}-{str(month).zfill(2)}"
+        elif year:
+            string = f"{year}"
+        pipeline = [
+        {"$match": {"_id": {"$in": transaction_ids}}},
+        {"$match": {"created_date": {"$regex": string}}},
+        {"$skip": skip},
+        {"$limit": page_size}
+        ]
+
+        filtered_data = list(transaction.aggregate(pipeline))
+        all_txn = []
+        for values in filtered_data:
+            txn = Transaction(**values)
+            all_txn.append(txn.to_dict())
+        return all_txn
+    

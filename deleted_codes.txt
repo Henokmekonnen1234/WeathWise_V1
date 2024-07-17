@@ -1,0 +1,50 @@
+
+        pipeline =[
+            {"$match": {"_id": {"$in": transaction_ids}}},
+            {"$match": {"created_date": {"$regex": string}}},
+            {
+                "$facet": {
+                    "summery": [
+                        {"$group": {
+                            "_id": "$type",
+                            "total_amount": {"$sum": "$amount"}
+                        }}
+                    ],
+                    "transactions": [
+                        {"$project": {
+                            "_id": 1,
+                            "type": 1,
+                            "amount": 1,
+                            "created_date": 1,
+                            "updated_date": 1,
+                            "catagory": 1,
+                            "description": 1
+                        }}
+                    ]
+                }
+            }
+        ]
+        
+    #     [
+    #     {"$match": {"_id": {"$in": transaction_ids}}},
+    #     {"$match": {
+    #           "created_date": {"$regex": string}}},
+    #     {"$group": {
+    #         "_id": "$type",
+    #         "total_amount": {"$sum": "$amount"}
+    #     }}
+    # ]
+
+        summary = list(transaction.aggregate(pipeline))
+        print(summary)
+        result = {"income": 0, "expense": 0}
+        all_txn =[]
+        for item in summary:
+            for value in item["transactions"]:
+                txn = Transaction(**value)
+                all_txn.append(txn.to_dict())
+            for values in item["summery"]:
+                transaction_type = values['_id']
+                result[transaction_type] = values['total_amount']
+        return {"summary": result, "transactions": all_txn}
+    

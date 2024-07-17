@@ -11,7 +11,7 @@ import bcrypt
 import os
 
 not_found = {"error": "Data not_found"}
-error_data = {"error": "Log in again please"}
+expired = {"error": "Log in again please"}
 internal_error = {"error": "Internal Error occured"}
 
 UPLOAD_FOLDER = "/home/drogo/Alx/VolunEase_v1/web_flask/static/images/uploaded"

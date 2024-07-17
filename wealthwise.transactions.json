@@ -1,0 +1,181 @@
+[{
+  "_id": "fa5707a2-692a-4ad9-a45f-32fb01d6b454",
+  "created_date": "2024-06-26T10:24:19.076715",
+  "updated_date": "2024-06-26T10:24:19.076715",
+  "user_id": "d115dc18-a97d-4ff0-bee1-a571a19ac3da",
+  "amount": 40.4,
+  "type": "expense",
+  "catagory": "food",
+  "description": "for coffee"
+},
+{
+  "_id": "5b78d2d2-a064-449a-a365-c08757cc10f5",
+  "created_date": "2024-07-08T10:28:21.785968",
+  "updated_date": "2024-07-08T12:00:10.610362",
+  "amount": 200,
+  "type": "income",
+  "catagory": "work",
+  "description": "income for work"
+},
+{
+  "_id": "66063865-e0dd-44ab-af97-e285123c8cd9",
+  "created_date": "2024-07-08T10:29:04.389542",
+  "updated_date": "2024-07-08T10:29:04.389542",
+  "amount": 87.92,
+  "type": "expense",
+  "catagory": "food",
+  "description": "expense for food"
+},
+{
+  "_id": "28e76830-2734-41bc-81d5-4c0f1e58605d",
+  "created_date": "2024-07-08T10:30:30.023526",
+  "updated_date": "2024-07-08T10:30:30.023526",
+  "amount": 125.45,
+  "type": "expense",
+  "catagory": "entertainment",
+  "description": "expense for entertainment"
+},
+{
+  "_id": "00000001-0000-4000-8000-000000000001",
+  "created_date": "2015-01-10T14:32:18.000000",
+  "updated_date": "2015-01-10T14:32:18.000000",
+  "amount": 150.5,
+  "type": "income",
+  "catagory": "salary",
+  "description": "Salary for January"
+},
+{
+  "_id": "00000002-0000-4000-8000-000000000002",
+  "created_date": "2016-02-15T09:12:45.000000",
+  "updated_date": "2016-02-15T09:12:45.000000",
+  "amount": 321.78,
+  "type": "income",
+  "catagory": "freelance",
+  "description": "Freelance project payment"
+},
+{
+  "_id": "00000003-0000-4000-8000-000000000003",
+  "created_date": "2017-03-22T17:48:01.000000",
+  "updated_date": "2017-03-22T17:48:01.000000",
+  "amount": 75,
+  "type": "expense",
+  "catagory": "groceries",
+  "description": "Weekly grocery shopping"
+},
+{
+  "_id": "00000004-0000-4000-8000-000000000004",
+  "created_date": "2018-04-05T12:00:00.000000",
+  "updated_date": "2018-04-05T12:00:00.000000",
+  "amount": 1200,
+  "type": "income",
+  "catagory": "bonus",
+  "description": "Annual work bonus"
+},
+{
+  "_id": "00000005-0000-4000-8000-000000000005",
+  "created_date": "2019-05-19T08:15:23.000000",
+  "updated_date": "2019-05-19T08:15:23.000000",
+  "amount": 42.99,
+  "type": "expense",
+  "category": "entertainment",
+  "description": "Movie ticket and popcorn"
+},
+{
+  "_id": "00000006-0000-4000-8000-000000000006",
+  "created_date": "2020-06-10T10:33:47.000000",
+  "updated_date": "2020-06-10T10:33:47.000000",
+  "amount": 800,
+  "type": "income",
+  "catagory": "investment",
+  "description": "Investment return"
+},
+{
+  "_id": "00000008-0000-4000-8000-000000000008",
+  "created_date": "2021-07-21T15:27:12.000000",
+  "updated_date": "2021-07-21T15:27:12.000000",
+  "amount": 157.2,
+  "type": "expense",
+  "catagory": "dining",
+  "description": "Restaurant dinner with friends"
+},
+{
+  "_id": "00000009-0000-4000-8000-000000000009",
+  "created_date": "2022-08-12T09:48:33.000000",
+  "updated_date": "2022-08-12T09:48:33.000000",
+  "amount": 300,
+  "type": "income",
+  "catagory": "gift",
+  "description": "Birthday gift from family"
+},
+{
+  "_id": "00000010-0000-4000-8000-000000000010",
+  "created_date": "2023-09-03T11:01:44.000000",
+  "updated_date": "2023-09-03T11:01:44.000000",
+  "amount": 98.45,
+  "type": "expense",
+  "catagory": "transportation",
+  "description": "Monthly public transport pass"
+},
+{
+  "_id": "00000011-0000-4000-8000-000000000011",
+  "created_date": "2016-04-03T11:01:44.000000",
+  "updated_date": "2016-04-03T11:01:44.000000",
+  "amount": 50,
+  "type": "income",
+  "catagory": "allowance",
+  "description": "Weekly allowance"
+},
+{
+  "_id": "00000012-0000-4000-8000-000000000012",
+  "created_date": "2016-04-04T11:01:44.000000",
+  "updated_date": "2016-04-04T11:01:44.000000",
+  "amount": 25.75,
+  "type": "expense",
+  "catagory": "entertainment",
+  "description": "Movie ticket"
+},
+{
+  "_id": "00000013-0000-4000-8000-000000000013",
+  "created_date": "2016-04-05T11:01:44.000000",
+  "updated_date": "2016-04-05T11:01:44.000000",
+  "amount": 10,
+  "type": "expense",
+  "catagory": "dining",
+  "description": "Lunch at cafe"
+},
+{
+  "_id": "00000014-0000-4000-8000-000000000014",
+  "created_date": "2017-05-06T11:01:44.000000",
+  "updated_date": "2017-05-06T11:01:44.000000",
+  "amount": 125,
+  "type": "income",
+  "catagory": "part-time job",
+  "description": "Payment for part-time work"
+},
+{
+  "_id": "00000015-0000-4000-8000-000000000015",
+  "created_date": "2017-05-07T11:01:44.000000",
+  "updated_date": "2017-05-07T11:01:44.000000",
+  "amount": 30,
+  "type": "expense",
+  "catagory": "clothing",
+  "description": "New T-shirt"
+},
+{
+  "_id": "00000016-0000-4000-8000-000000000016",
+  "created_date": "2017-05-08T11:01:44.000000",
+  "updated_date": "2017-05-08T11:01:44.000000",
+  "amount": 15,
+  "type": "expense",
+  "catagory": "entertainment",
+  "description": "Book purchase"
+},
+{
+  "_id": "00000017-0000-4000-8000-000000000017",
+  "created_date": "2018-06-09T11:01:44.000000",
+  "updated_date": "2018-06-09T11:01:44.000000",
+  "amount": 700,
+  "type": "income",
+  "catagory": "summer job",
+  "description": "Summer job earnings"
+}]

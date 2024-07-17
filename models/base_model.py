@@ -1,5 +1,13 @@
+#!/usr/bin/env python3
 
-from copy import deepcopy
+"""
+BaseModel class definition module.
+
+This module contains the definition of the BaseModel class, which provides
+the foundational methods for saving, updating, and converting instances
+to dictionary format for all other classes that inherit from it.
+"""
+
 from datetime import datetime, timezone
 import models
 from uuid import uuid4
@@ -8,20 +16,25 @@ time = "%Y-%m-%dT%H:%M:%S.%f"
 
 
 class BaseModel:
-    """This class is the base for all other classes containing methods for
-       saving and changing to dictionary format.
+    """
+    This class is the base for all other classes containing methods for
+    saving and converting to dictionary format.
 
     Attributes:
-        id (str): Identifies each object uniquely.
+        _id (str): Identifies each object uniquely.
         created_date (datetime): Stores the created date of the object.
         updated_date (datetime): Stores the updated date of the object.
     """
 
     def __init__(self, *args, **kwargs):
-        """Initialize the BaseModel"""
-        if "_id" not in kwargs.keys() and "updated_date"\
-                not in kwargs.keys() and "__class__"  not in\
-                 kwargs.keys():
+        """
+        Initialize the BaseModel.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
+        if "_id" not in kwargs.keys() and "updated_date" not in kwargs.keys() and "__class__" not in kwargs.keys():
             self._id = str(uuid4())
             self.created_date = datetime.now(timezone.utc)
             self.updated_date = self.created_date
@@ -38,19 +51,27 @@ class BaseModel:
                 setattr(self, key, value)
 
     def save(self):
-        """Save the object to the database"""
+        """
+        Save the object to the database.
+        """
         self.updated_date = datetime.now(timezone.utc)
         models.storage.new(self)
 
     def update(self):
-        """Update the object to the database"""
+        """
+        Update the object in the database.
+        """
         self.updated_date = datetime.now(timezone.utc)
         models.storage.update(self)
 
     def to_dict(self):
-        """Convert the class instance to a dictionary"""
+        """
+        Convert the class instance to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the instance.
+        """
         to_dict = {}
-        print(self.__dict__)
         for key, value in self.__dict__.items():
             if key != "password":
                 to_dict[key] = value
@@ -62,9 +83,16 @@ class BaseModel:
         return to_dict
 
     def __str__(self):
-        """Represent the class in string format"""
+        """
+        Represent the class in string format.
+
+        Returns:
+            str: A string representation of the instance.
+        """
         return f"[{self.__class__.__name__}] ({self._id}) {self.__dict__}"
 
     def delete(self):
-        """Delete the object from the database"""
+        """
+        Delete the object from the database.
+        """
         models.storage.delete(self)

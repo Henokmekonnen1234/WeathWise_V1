@@ -48,3 +48,16 @@
                 result[transaction_type] = values['total_amount']
         return {"summary": result, "transactions": all_txn}
     
+
+    def all(self, cls=None):
+        """Query all objects from the database"""
+        new_dict = {}
+        for class_name, class_type in classes.items():
+            if cls is None or cls is class_type or cls is class_name:
+                collection = self.get_collection(class_name.lower() + "s")
+                for obj in collection.find():
+                    obj_instance = class_type(**obj)
+                    new_dict[f"{obj_instance.__class__.__name__}.{obj_instance._id}"] = obj_instance.to_dict()
+        return new_dict
+
+    

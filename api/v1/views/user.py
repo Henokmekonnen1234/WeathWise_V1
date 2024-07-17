@@ -1,4 +1,37 @@
+"""
+transaction.py
 
+This module defines API endpoints related to user registration, login, user profile management,
+and user deletion for the WealthWise application.
+
+It uses Flask and Flask-JWT-Extended for authentication, SQLAlchemy for database operations,
+and custom utility functions for validation, encryption, and error handling.
+
+Attributes:
+    app_views (Blueprint): Blueprint for organizing API routes.
+    request (Request): Object for handling HTTP requests in Flask.
+    jsonify (Function): Function for converting Python dictionaries to JSON responses.
+    create_access_token (Function): Generates JWT access tokens for authentication.
+    jwt_required (Decorator): Validates JWT tokens for protected routes.
+    get_jwt_identity (Function): Retrieves the identity (user ID) from a JWT token.
+    storage (SQLAlchemy): Database storage for ORM operations.
+    User (Class): SQLAlchemy model for User data.
+    taken_value (Function): Checks if a value is already taken in the database.
+    encrypt (Function): Encrypts passwords for secure storage.
+    decrypt (Function): Decrypts passwords for authentication.
+    not_found (dict): Dictionary with a "Not Found" message for error responses.
+    is_user_valid (Function): Validates user data before registration or update.
+
+Functions:
+    user_register: Endpoint for user registration.
+    login: Endpoint for user login authentication.
+    get_user: Endpoint to retrieve user profile information.
+    update_user: Endpoint to update user profile information.
+    delete_user: Endpoint to delete user account.
+
+Example:
+    localhost:5000/api/v1/login
+"""
 
 from api.v1.views import app_views
 from flask import request, jsonify
@@ -10,6 +43,16 @@ from models.utility import is_user_valid
 
 @app_views.route("/register", methods=["POST"], strict_slashes=False)
 def user_register():
+    """
+    Endpoint for user registration.
+
+    Validates user data, checks for existing usernames,
+    encrypts the password, creates a new User object, and saves it to the database.
+
+    Returns:
+        JSON: JSON response with user data including the newly created user ID.
+              If validation fails or username is taken, returns an error message.
+    """
     user_data = request.get_json()
     if is_user_valid(user_data):
         return jsonify(is_user_valid(user_data)), 400
@@ -23,6 +66,15 @@ def user_register():
 
 @app_views.route("/login", methods=["POST"], strict_slashes=False)
 def login():
+    """
+    Endpoint for user login authentication.
+
+    Retrieves login data, validates username, checks password, and generates a JWT token if successful.
+
+    Returns:
+        JSON: JSON response with a JWT token if login is successful.
+              Returns error messages for incorrect username or password, or if data is missing.
+    """
     login_data = request.get_json()
     if login_data:
         user = storage.filter(User, "username", login_data["username"])
@@ -35,13 +87,21 @@ def login():
         else:
             return jsonify("Username is not found"), 404
     else:
-        return jsonify("data not found"), 404
+        return jsonify("Data not found"), 404
 
 
 @app_views.route("/user", methods=["GET"], strict_slashes=False)
 @jwt_required()
 def get_user():
+    """
+    Endpoint to retrieve user profile information.
 
+    Requires a valid JWT token for authentication.
+
+    Returns:
+        JSON: JSON response with user profile information.
+              Returns a "Not Found" message if user does not exist.
+    """
     user_id = get_jwt_identity()
     user = storage.get(User, user_id)
     if not user:
@@ -53,7 +113,16 @@ def get_user():
 @app_views.route("/user", methods=["PUT"], strict_slashes=False)
 @jwt_required()
 def update_user():
+    """
+    Endpoint to update user profile information.
 
+    Requires a valid JWT token for authentication.
+    Validates user data, updates user information, and saves changes to the database.
+
+    Returns:
+        JSON: JSON response with updated user profile information.
+              Returns validation errors if user data is invalid.
+    """
     user_id = get_jwt_identity()
     user = storage.get(User, user_id)
     if not user:
@@ -70,7 +139,16 @@ def update_user():
 @app_views.route("/user", methods=["DELETE"], strict_slashes=False)
 @jwt_required()
 def delete_user():
+    """
+    Endpoint to delete user account.
 
+    Requires a valid JWT token for authentication.
+    Deletes user from the database.
+
+    Returns:
+        JSON: JSON response with user's full name after deletion.
+              Returns an error if user does not exist.
+    """
     user_id = get_jwt_identity()
     user = storage.get(User, user_id)
     user_name = f"{user.first_name} {user.last_name}"

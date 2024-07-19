@@ -37,12 +37,14 @@ Example:
 from api.v1.views import app_views
 from flask import request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flasgger import swag_from
 from models import storage
 from models.user import User
 from models.utility import taken_value, encrypt, decrypt, not_found
 from models.utility import is_user_valid
 
 @app_views.route("/register", methods=["POST"], strict_slashes=False)
+@swag_from("documentation/user/register.yml")
 def user_register():
     """
     Endpoint for user registration.
@@ -66,6 +68,7 @@ def user_register():
 
 
 @app_views.route("/login", methods=["POST"], strict_slashes=False)
+@swag_from("documentation/user/login.yml")
 def login():
     """
     Endpoint for user login authentication.
@@ -93,6 +96,7 @@ def login():
 
 @app_views.route("/user", methods=["GET"], strict_slashes=False)
 @jwt_required()
+@swag_from("documentation/user/get_user.yml")
 def get_user():
     """
     Endpoint to retrieve user profile information.
@@ -113,6 +117,7 @@ def get_user():
 
 @app_views.route("/user", methods=["PUT"], strict_slashes=False)
 @jwt_required()
+@swag_from("documentation/user/update_user.yml")
 def update_user():
     """
     Endpoint to update user profile information.
@@ -139,6 +144,7 @@ def update_user():
 
 @app_views.route("/user", methods=["DELETE"], strict_slashes=False)
 @jwt_required()
+@swag_from("documentation/user/delete_user.yml")
 def delete_user():
     """
     Endpoint to delete user account.

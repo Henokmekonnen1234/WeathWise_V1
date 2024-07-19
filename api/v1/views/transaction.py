@@ -30,6 +30,7 @@ Example:
 from api.v1.views import app_views
 from flask import request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from flasgger import swag_from
 from models import storage
 from models.user import User
 from models.transaction import Transaction
@@ -37,6 +38,7 @@ from models.utility import not_found
 
 @app_views.route("/transactions", methods=["POST"], strict_slashes=False)
 @jwt_required()
+@swag_from('documentation/transaction/add_transaction.yml')
 def add_transaction():
     """
     Endpoint to add a new transaction for a user.
@@ -65,6 +67,7 @@ def add_transaction():
 
 @app_views.route("/transactions", methods=["GET"], strict_slashes=False)
 @jwt_required()
+@swag_from('documentation/transaction/get_all_transaction.yml')
 def get_all_transaction():
     """
     Endpoint to retrieve all transactions for a user with pagination.
@@ -87,6 +90,7 @@ def get_all_transaction():
 
 @app_views.route("/transactions/<id>", methods=["GET"], strict_slashes=False)
 @jwt_required()
+@swag_from('documentation/transaction/get_transaction.yml')
 def get_transaction(id=None):
     """
     Endpoint to retrieve a specific transaction by ID for a user.
@@ -114,6 +118,7 @@ def get_transaction(id=None):
 
 @app_views.route("/transactions/<id>", methods=["PUT"], strict_slashes=False)
 @jwt_required()
+@swag_from('documentation/transaction/update_transaction.yml')
 def update_transaction(id=None):
     """
     Endpoint to update a specific transaction by ID for a user.
@@ -144,6 +149,7 @@ def update_transaction(id=None):
 
 @app_views.route("/summery", methods=["GET"], strict_slashes=False)
 @jwt_required()
+@swag_from('documentation/transaction/txn_summery.yml')
 def txn_summary():
     """
     Endpoint to retrieve transaction summaries based on year and month for a user.

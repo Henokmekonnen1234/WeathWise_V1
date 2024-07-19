@@ -1,5 +1,4 @@
-
-
+#!/usr/bin/env python3
 """
 app.py
 
@@ -32,6 +31,7 @@ from api.v1.views import app_views
 from flask import Flask, jsonify, make_response
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flasgger import Swagger
 from models import storage
 from uuid import uuid4
 
@@ -58,6 +58,13 @@ def close_mongodb(error):
 def error_handler(error):
     """Handle 404 Not Found errors with a JSON response."""
     return make_response(jsonify({'error': f"{error}"}), 404)
+
+app.config['SWAGGER'] = {
+    'title': 'WealthWise Restful API',
+    'version': 1
+}
+
+Swagger(app)
 
 
 if __name__ == "__main__":

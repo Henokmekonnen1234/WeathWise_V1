@@ -1,0 +1,33 @@
+get_transaction:
+  get:
+    tags:
+      - transactions
+    summary: Get a transaction by ID
+    description: Retrieve a transaction by its ID.
+    produces:
+      - application/json
+    parameters:
+      - in: path
+        name: id
+        type: string
+        description: Transaction ID
+        required: true
+    responses:
+      200:
+        description: Transaction details
+        schema:
+          type: object
+          properties:
+            _id:
+              type: string
+            amount:
+              type: number
+              format: float
+            type:
+              type: string
+            category:
+              type: string
+            description:
+              type: string
+      404:
+        description: Transaction not found

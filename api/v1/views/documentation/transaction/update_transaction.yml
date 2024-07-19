@@ -1,0 +1,52 @@
+update_transaction:
+  put:
+    tags:
+      - transactions
+    summary: Update a transaction
+    description: Update an existing transaction by ID.
+    consumes:
+      - application/json
+    produces:
+      - application/json
+    parameters:
+      - in: path
+        name: id
+        type: string
+        description: Transaction ID
+        required: true
+      - in: body
+        name: transaction
+        description: Updated transaction data
+        schema:
+          type: object
+          properties:
+            amount:
+              type: number
+              format: float
+            type:
+              type: string
+            category:
+              type: string
+            description:
+              type: string
+    responses:
+      200:
+        description: Transaction updated successfully
+        schema:
+          type: object
+          properties:
+            _id:
+              type: string
+            amount:
+              type: number
+              format: float
+            type:
+              type: string
+            category:
+              type: string
+            description:
+              type: string
+      404:
+        description: Transaction not found
+      400:
+        description: Invalid input data

@@ -28,7 +28,7 @@ Example:
 """
 
 from api.v1.views import app_views
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flasgger import Swagger
@@ -65,6 +65,11 @@ app.config['SWAGGER'] = {
 }
 
 Swagger(app)
+
+@app.route('/documentation/<path:filename>')
+def serve_documentation(filename):
+    return send_from_directory('documentation', filename)
+
 
 
 if __name__ == "__main__":

@@ -63,7 +63,7 @@ The application uses environment variables for configuration. You can set these 
 ### Running the Server
 ```sh
 flask run
-
+```
 # API Endpoints
 
 ## User Endpoints
@@ -348,7 +348,7 @@ flask run
         ]
     }
     ```
-    
+
 ## Documentation
 Swagger documentation is available for all API endpoints. You can access it by navigating to [http://localhost:5000/apidocs](http://localhost:5000/apidocs) after starting the server.
 

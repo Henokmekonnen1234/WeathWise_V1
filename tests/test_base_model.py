@@ -5,10 +5,11 @@ Contains the TestBaseModelDocs and TestBaseModel classes
 
 from datetime import datetime, timezone
 import inspect
+import unittest
 import models
 from models.base_model import BaseModel
 import pep8
-import unittest
+from unittest import mock
 from uuid import UUID
 
 
@@ -130,6 +131,6 @@ class TestBaseModel(unittest.TestCase):
     def test_delete(self):
         """Test that delete method calls storage.delete"""
         base = BaseModel()
-        with unittest.mock.patch('models.storage.delete') as mock_delete:
+        with mock.patch('models.storage.delete') as mock_delete:
             base.delete()
             mock_delete.assert_called_once_with(base)

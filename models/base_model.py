@@ -34,7 +34,8 @@ class BaseModel:
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
         """
-        if "_id" not in kwargs.keys() and "updated_date" not in kwargs.keys() and "__class__" not in kwargs.keys():
+        if "_id" not in kwargs.keys() and "updated_date" not in \
+                kwargs.keys() and "__class__" not in kwargs.keys():
             self._id = str(uuid4())
             self.created_date = datetime.now(timezone.utc)
             self.updated_date = self.created_date
@@ -76,10 +77,14 @@ class BaseModel:
             if key != "password":
                 to_dict[key] = value
         to_dict["__class__"] = self.__class__.__name__
-        if "created_date" in to_dict and not isinstance(to_dict["created_date"], str):
-            to_dict["created_date"] = to_dict["created_date"].strftime("%Y-%m-%dT%H:%M:%S.%f")
-        if "updated_date" in to_dict and not isinstance(to_dict["updated_date"], str):
-            to_dict["updated_date"] = to_dict["updated_date"].strftime("%Y-%m-%dT%H:%M:%S.%f")
+        if "created_date" in to_dict and not\
+                isinstance(to_dict["created_date"], str):
+            to_dict["created_date"] = \
+                    to_dict["created_date"].strftime("%Y-%m-%dT%H:%M:%S.%f")
+        if "updated_date" in\
+                to_dict and not isinstance(to_dict["updated_date"], str):
+            to_dict["updated_date"] =\
+                to_dict["updated_date"].strftime("%Y-%m-%dT%H:%M:%S.%f")
         return to_dict
 
     def __str__(self):

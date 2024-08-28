@@ -3,15 +3,18 @@
 """
 db_storage.py
 
-This module defines the DBStorage class, responsible for connecting to and interacting
-with the MongoDB database for the WealthWise application. It provides methods for 
-CRUD operations on User and Transaction data.
+This module defines the DBStorage class, responsible for connecting to
+and interacting with the MongoDB database for the WealthWise
+application. It provides methods for CRUD operations on User
+and Transaction data.
 
 Classes:
-    DBStorage: Handles database operations for User and Transaction models.
+    DBStorage: Handles database operations for User and Transaction
+                models.
 
 Attributes:
-    classes (dict): Dictionary mapping class names to their respective classes.
+    classes (dict): Dictionary mapping class names to their respective
+                    classes.
 """
 
 from datetime import datetime
@@ -27,31 +30,34 @@ classes = {
     "transaction": Transaction
 }
 
+
 class DBStorage:
     """
     DBStorage Class
 
-    This class provides methods to connect to the MongoDB database and perform CRUD 
-    operations on User and Transaction data.
+    This class provides methods to connect to the MongoDB database and
+    perform CRUD operations on User and Transaction data.
 
     Attributes:
         __client (MongoClient): MongoDB client instance.
         __db (Database): MongoDB database instance.
     """
-    
+
     __client = None
     __db = None
 
     def __init__(self):
         """
-        Initializes the DBStorage instance by establishing a connection to the MongoDB database.
+        Initializes the DBStorage instance by establishing a connection
+        to the MongoDB database.
         """
         self.connect()
 
     def connect(self):
         """
-        Establishes a connection to the MongoDB database using environment variables for 
-        configuration. If a connection already exists, it does nothing.
+        Establishes a connection to the MongoDB database using environment
+        variables for configuration. If a connection already exists,
+        it does nothing.
         """
         if not self.__client:
             MONGO_HOST = getenv('MONGO_HOST', 'localhost')
@@ -79,12 +85,14 @@ class DBStorage:
         Args:
             obj (BaseModel): The object to be inserted into the database.
         """
-        collection = self.get_collection(obj.__class__.__name__.lower() + "s")
+        collection = self.get_collection(obj.__class__.__name__.lower() +
+                                         "s")
         data = obj.to_dict()
         if obj.__class__.__name__ == "User":
             data["password"] = obj.password
             data["transactions"] = []
-        del data["__class__"]
+        if data.get("__class__"):
+            del data["__class__"]
         collection.insert_one(data)
 
     def update(self, obj):
@@ -92,13 +100,16 @@ class DBStorage:
         Updates an existing object in the corresponding MongoDB collection.
 
         Args:
-            obj (BaseModel): The object with updated data to be saved in the database.
+            obj (BaseModel): The object with updated data to be saved in the
+            database.
         """
-        collection = self.get_collection(obj.__class__.__name__.lower() + "s")
+        collection = self.get_collection(obj.__class__.__name__.lower() +
+                                         "s")
         data = obj.to_dict()
         if obj.__class__.__name__ == "User":
             data["password"] = obj.password
-        del data["__class__"]
+        if data.get("__class__"):
+            del data["__class__"]
         collection.update_one({"_id": obj._id}, {"$set": data})
 
     def delete(self, obj=None):
@@ -106,11 +117,13 @@ class DBStorage:
         Deletes an object from the corresponding MongoDB collection.
 
         Args:
-            obj (BaseModel, optional): The object to be deleted from the database.
+            obj (BaseModel, optional): The object to be deleted from the
+            database.
                                        Defaults to None.
         """
         if obj is not None:
-            collection = self.get_collection(obj.__class__.__name__.lower() + "s")
+            collection = self.get_collection(obj.__class__.__name__.lower()
+                                             + "s")
             collection.delete_one({"_id": obj._id})
 
     def reload(self):
@@ -147,7 +160,8 @@ class DBStorage:
 
     def filter(self, cls, column_name, value):
         """
-        Retrieves an object by class and a specified column value from the MongoDB database.
+        Retrieves an object by class and a specified column value from the
+        MongoDB database.
 
         Args:
             cls (BaseModel): The class of the object to retrieve.
@@ -165,7 +179,8 @@ class DBStorage:
 
     def search(self, obj, year, month, page, page_size):
         """
-        Searches for transactions based on year and month, with pagination.
+        Searches for transactions based on year and month, with
+        pagination.
 
         Args:
             obj (User): The user object to retrieve transactions for.
@@ -175,7 +190,8 @@ class DBStorage:
             page_size (int): The number of transactions per page.
 
         Returns:
-            dict: A dictionary containing pagination details, summary, and transactions.
+            dict: A dictionary containing pagination details, summary,
+            and transactions.
         """
         transaction = self.get_collection(Transaction.__name__.lower() + "s")
         transaction_ids = obj.transactions

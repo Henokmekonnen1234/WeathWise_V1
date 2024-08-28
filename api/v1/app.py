@@ -38,9 +38,19 @@ from uuid import uuid4
 app = Flask(__name__)
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 app.config["SECRET_KEY"] = str(uuid4())
+app.config['SWAGGER'] = {
+    'title': 'WealthWise Restful API',
+    'version': 1
+}
 app.register_blueprint(app_views)
 cors = CORS(app, resources={r"/api/v1/*/": {"origins": "*"}})
 jwt = JWTManager(app)
+swagger = Swagger(app)
+
+
+@app.route('/documentation/<path:filename>')
+def serve_documentation(filename):
+    return send_from_directory('documentation', filename)
 
 
 @app.before_request
@@ -58,18 +68,6 @@ def close_mongodb(error):
 def error_handler(error):
     """Handle 404 Not Found errors with a JSON response."""
     return make_response(jsonify({'error': f"{error}"}), 404)
-
-app.config['SWAGGER'] = {
-    'title': 'WealthWise Restful API',
-    'version': 1
-}
-
-Swagger(app)
-
-@app.route('/documentation/<path:filename>')
-def serve_documentation(filename):
-    return send_from_directory('documentation', filename)
-
 
 
 if __name__ == "__main__":

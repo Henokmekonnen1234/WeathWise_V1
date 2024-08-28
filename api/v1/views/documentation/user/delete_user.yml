@@ -1,0 +1,20 @@
+delete_user:
+  delete:
+    tags:
+      - users
+    summary: Delete user account
+    description: Delete user account from the database.
+    produces:
+      - application/json
+    responses:
+      200:
+        description: User account deleted successfully
+        schema:
+          type: object
+          properties:
+            user_name:
+              type: string
+      404:
+        description: User not found
+      400:
+        description: User could not be deleted

@@ -1,0 +1,38 @@
+login:
+  post:
+    tags:
+      - users
+    summary: User login
+    description: Authenticate user by providing username and password.
+    consumes:
+      - application/json
+    produces:
+      - application/json
+    parameters:
+      - in: body
+        name: login
+        description: The user login data
+        schema:
+          type: object
+          required:
+            - username
+            - password
+          properties:
+            username:
+              type: string
+            password:
+              type: string
+    responses:
+      200:
+        description: Login successful, returns JWT token
+        schema:
+          type: object
+          properties:
+            token:
+              type: string
+      401:
+        description: Incorrect password
+      404:
+        description: Username not found
+      400:
+        description: Missing login data

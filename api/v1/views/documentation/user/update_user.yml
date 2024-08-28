@@ -1,0 +1,51 @@
+update_user:
+  put:
+    tags:
+      - users
+    summary: Update user profile
+    description: Update user profile information.
+    consumes:
+      - application/json
+    produces:
+      - application/json
+    parameters:
+      - in: body
+        name: user
+        description: The user data to update
+        schema:
+          type: object
+          properties:
+            first_name:
+              type: string
+            last_name:
+              type: string
+            email:
+              type: string
+            username:
+              type: string
+            password:
+              type: string
+    responses:
+      200:
+        description: User profile updated successfully
+        schema:
+          type: object
+          properties:
+            _id:
+              type: string
+            first_name:
+              type: string
+            last_name:
+              type: string
+            email:
+              type: string
+            username:
+              type: string
+            transactions:
+              type: array
+              items:
+                type: string
+      404:
+        description: User not found
+      400:
+        description: Validation error or missing data

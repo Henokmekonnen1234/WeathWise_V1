@@ -1,0 +1,30 @@
+get_user:
+  get:
+    tags:
+      - users
+    summary: Get user profile
+    description: Retrieve user profile information.
+    produces:
+      - application/json
+    responses:
+      200:
+        description: User profile retrieved successfully
+        schema:
+          type: object
+          properties:
+            _id:
+              type: string
+            first_name:
+              type: string
+            last_name:
+              type: string
+            email:
+              type: string
+            username:
+              type: string
+            transactions:
+              type: array
+              items:
+                type: string
+      404:
+        description: User not found

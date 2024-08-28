@@ -1,0 +1,50 @@
+add_transaction:
+  post:
+    tags:
+      - transactions
+    summary: Add a new transaction
+    description: Add a new transaction to the user's account.
+    consumes:
+      - application/json
+    produces:
+      - application/json
+    parameters:
+      - in: body
+        name: transaction
+        description: The transaction to create
+        schema:
+          type: object
+          required:
+            - amount
+            - type
+          properties:
+            amount:
+              type: number
+              format: float
+            type:
+              type: string
+            category:
+              type: string
+            description:
+              type: string
+    responses:
+      200:
+        description: Transaction created successfully
+        schema:
+          type: object
+          properties:
+            _id:
+              type: string
+            amount:
+              type: number
+              format: float
+            type:
+              type: string
+            category:
+              type: string
+            description:
+              type: string
+      404:
+        description: User not found
+      400:
+        description: Invalid input data

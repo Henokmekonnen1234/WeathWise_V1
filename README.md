@@ -46,7 +46,7 @@ WealthWise API is a backend service for the WealthWise application, designed to 
 
 5. Run the application:
     ```sh
-Python -m api.v1.app
+        Python -m api.v1.app
     ```
 
 ## Configuration
